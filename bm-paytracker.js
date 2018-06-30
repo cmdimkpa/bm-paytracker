@@ -1,4 +1,5 @@
 // Javascript Library for the BlockMagic Payment Tracker application
+// ver 0.5
 
 var httpdata;
 var base_urls = new Object();
