@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- bm-paytracker library -->
+<script src="http://ceres-ai.com:6765/static/bm-paytracker.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( ".datepicker" ).datepicker();
+  } );
+  </script>
+<style>
+#bm-paytracker-table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#bm-paytracker-table td, #bm-paytracker-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#bm-paytracker-table tr:nth-child(even){background-color: #f2f2f2;}
+
+#bm-paytracker-table tr:hover {background-color: #ddd;}
+
+#bm-paytracker-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+body {
+    font: 15px arial, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+input[type=text], select, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+label {
+    padding: 12px 12px 12px 0;
+    display: inline-block;
+}
+
+input[type=submit] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+input[type=button] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+input[type=button]:hover {
+    background-color: #45a049;
+}
+
+.container {
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+.col-25 {
+    float: left;
+    width: 25%;
+    margin-top: 6px;
+}
+
+.col-75 {
+    float: left;
+    width: 75%;
+    margin-top: 6px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+    .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+</style>
+</head>
+<body>
+  <div>
+    <h1 align="right" style="color: green">Payment Tracker Demo</h1>
+    <img align="right" src="http://ceres-ai.com:6765/static/blockmagiclogo.jpg" height="150">
+  </div><br><br>
+<h1><i class="fa fa-send-o" style="font-size:50px;color:green"></i>    Send payment receipts</h1>
+<p>Use this form to post payment receipts to the Blockchain.</p>
+
+<div class="container">
+  <form>
+    <div class="row">
+      <div class="col-25">
+        <label for="payer-id">Payer ID</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="payer-id" name="payer-id" placeholder="PayerID">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="amount">Amount paid</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="amount" name="amount" placeholder="Amount">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="track">Payment Track</label>
+      </div>
+      <div class="col-75">
+        <select id="track" name="track">
+          <option value="Utility Payment">Utility Payment</option>
+        </select>
+      </div>
+    </div>
+        <div class="row">
+      <div class="col-25">
+        <label for="company">Receiving Company</label>
+      </div>
+      <div class="col-75">
+        <select id="company" name="company">
+          <option value="Acme Systems Limited">Acme Systems Limited</option>
+        </select>
+      </div>
+    </div><br>
+    <div class="row">
+      <input onclick="PostPayment()" type="submit" value="Post Payment">
+    </div>
+  </form>
+</div>
+
+<br><br>
+
+<div>
+
+  <div style="width:50%; float: left">
+    <h1><i class="fa fa-search" style="font-size:50px;color:green"></i>    Query payment receipts</h1>
+<p>Use this form to query payment receipts.</p>
+
+<div class="container">
+  <form style="width: 100%">
+    <div class="row">
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>From Date</label>
+      </div>
+      <div class="col-75">
+        <input type="text" class="datepicker" id="from-date" placeholder="click here for date">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label>To Date</label>
+      </div>
+      <div class="col-75">
+        <input type="text" class="datepicker" id="to-date" placeholder="click here for date">
+      </div>
+    </div>
+        <div class="row">
+      <div class="col-25">
+        <label for="company">Receiving Company</label>
+      </div>
+      <div class="col-75">
+        <select id="company" name="company">
+          <option value="Acme Systems Limited">Acme Systems Limited</option>
+        </select>
+      </div>
+    </div><br>
+    <div class="row">
+      <input onclick="SearchPayments()" type="button" value="Search Payments">
+    </div>
+  </form>
+</div>
+  </div>
+
+  <div style="width:50%; float: right">
+     <h1><i class="fa fa-newspaper-o" style="font-size:50px;color:green"></i>    Search Results</h1>
+     <div>
+      <table id="bm-paytracker-table">
+        <tr><th>Date</th><th>From</th><th>To</th><th>Amount</th><th>Total</th></tr>
+      </table>
+     </div>
+  </div>
+
+</div>
+<script type="text/javascript">
+  // post payment to Blockchain
+  function PostPayment(){
+    // retrieve form details
+    var PayerID = $("#payer-id").val()
+    var Amount = $("#amount").val()
+    if(PayerID=="" || Amount == ""){alert("check your values")}else{
+      if(parseFloat(Amount).toString() == Amount){
+        // post now
+        push_receipt(PayerID,Amount,"utility")
+      }else{
+        alert("use numeric amount")
+      }
+    }
+  }
+// date validation
+function isValidDate(dateString)
+{
+    // First check for the pattern
+    if(!/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateString))
+        return false;
+    // Parse the date parts to integers
+    var parts = dateString.split("/");
+    var day = parseInt(parts[1], 10);
+    var month = parseInt(parts[0], 10);
+    var year = parseInt(parts[2], 10);
+    // Check the ranges of month and year
+    if(year < 1000 || year > 3000 || month == 0 || month > 12)
+        return false;
+    var monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+    // Adjust for leap years
+    if(year % 400 == 0 || (year % 100 != 0 && year % 4 == 0))
+        monthLength[1] = 29;
+    // Check the range of the day
+    return day > 0 && day <= monthLength[month - 1];
+};
+
+// search payments logged
+  function SearchPayments(){
+    // retrieve form details
+    var FromDate = $("#from-date").val()
+    var ToDate = $("#to-date").val()
+    if (isValidDate(FromDate) & isValidDate(ToDate)){
+      // query payments
+      query_payments("utility",FromDate,ToDate)
+    }else{
+      alert("check your dates")
+    }
+  }
+</script>
+</body>
+</html>
+
